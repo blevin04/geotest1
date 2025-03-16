@@ -40,6 +40,7 @@ dependencies:
   google_maps_flutter: ^2.10.1
   location: ^8.0.0
   google_places_flutter: ^2.1.0
+  bottom_drawer: ^0.0.5
 
 dev_dependencies:
   flutter_test:

@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/place_type.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:bottom_drawer/bottom_drawer.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -15,6 +16,9 @@ class Homepage extends StatefulWidget {
 }
 
 TextEditingController controller = TextEditingController();
+
+BottomDrawerController drawerController = BottomDrawerController();
+bool isDrawerOpen = false;
 final Completer<GoogleMapController> _controller =
     Completer<GoogleMapController>();
 Future<void> _goTo(CameraPosition NewPos) async {
@@ -156,12 +160,21 @@ class _HomepageState extends State<Homepage> {
                               placeType: PlaceType.geocode,
                             )));
                   },
-                )
+                ),
+                bottomDrawer(context)
               ],
             );
           }),
       floatingActionButton: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            if (isDrawerOpen) {
+              drawerController.close();
+              isDrawerOpen = false;
+            } else {
+              drawerController.open();
+              isDrawerOpen = true;
+            }
+          },
           icon: Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: InkWell(
@@ -177,4 +190,19 @@ class _HomepageState extends State<Homepage> {
           FloatingActionButtonLocation.miniStartDocked,
     );
   }
+}
+
+Widget bottomDrawer(BuildContext context) {
+  return BottomDrawer(
+    header: SizedBox(
+      height: 40,
+    ),
+    body: Container(
+      decoration: BoxDecoration(color: Colors.blue),
+    ),
+    headerHeight: 0,
+    drawerHeight: MediaQuery.of(context).size.height / 2.5,
+    color: Colors.blue,
+    controller: drawerController,
+  );
 }
