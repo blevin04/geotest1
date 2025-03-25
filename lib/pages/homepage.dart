@@ -201,14 +201,25 @@ Widget bottomDrawer(BuildContext context) {
       height: 40,
     ),
     body: Container(
-      decoration: BoxDecoration(color: Colors.grey),
+      // decoration: BoxDecoration(color: Colors.grey),
       child: Column(
-        children: [Container()],
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          ListTile(
+            tileColor: Colors.amber[100],
+            leading: Icon(Icons.circle),
+            title: Text("Circlular Area"),
+          ),
+          ListTile(
+            leading: Icon(Icons.polyline_outlined),
+            title: Text("Custom Area"),
+          )
+        ],
       ),
     ),
     headerHeight: 0,
     drawerHeight: MediaQuery.of(context).size.height / 2.5,
-    color: Colors.grey,
+    color: const Color.fromARGB(117, 158, 158, 158),
     controller: drawerController,
   );
 }
