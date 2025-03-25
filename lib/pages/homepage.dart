@@ -203,16 +203,32 @@ Widget bottomDrawer(BuildContext context) {
     body: Container(
       // decoration: BoxDecoration(color: Colors.grey),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          ListTile(
-            tileColor: Colors.amber[100],
-            leading: Icon(Icons.circle),
-            title: Text("Circlular Area"),
+          Text(
+            "Select Boundery",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          ListTile(
-            leading: Icon(Icons.polyline_outlined),
-            title: Text("Custom Area"),
+          Card(
+            margin: EdgeInsets.all(10),
+            child: ListTile(
+              // tileColor: Colors.amber[100],
+              leading: Icon(
+                Icons.circle,
+                size: 40,
+              ),
+              title: Text("Circlular Area"),
+            ),
+          ),
+          Card(
+            margin: EdgeInsets.all(10),
+            child: ListTile(
+              leading: Icon(
+                Icons.polyline_outlined,
+                size: 40,
+              ),
+              title: Text("Custom Area"),
+            ),
           )
         ],
       ),
