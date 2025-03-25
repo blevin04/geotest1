@@ -64,6 +64,9 @@ class _HomepageState extends State<Homepage> {
             return Stack(
               children: [
                 GoogleMap(
+                    onLongPress: (point) {
+                      drawerController.open();
+                    },
                     onMapCreated: (controller) {
                       _controller.complete(controller);
                     },
@@ -198,11 +201,14 @@ Widget bottomDrawer(BuildContext context) {
       height: 40,
     ),
     body: Container(
-      decoration: BoxDecoration(color: Colors.blue),
+      decoration: BoxDecoration(color: Colors.grey),
+      child: Column(
+        children: [Container()],
+      ),
     ),
     headerHeight: 0,
     drawerHeight: MediaQuery.of(context).size.height / 2.5,
-    color: Colors.blue,
+    color: Colors.grey,
     controller: drawerController,
   );
 }
