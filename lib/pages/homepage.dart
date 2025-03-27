@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geotest1/models.dart';
 import 'package:geotest1/utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
@@ -26,10 +27,21 @@ Future<void> _goTo(CameraPosition NewPos) async {
   await controller.animateCamera(CameraUpdate.newCameraPosition(NewPos));
 }
 
+Map infantAlarm = {};
+
 class _HomepageState extends State<Homepage> {
   // final Completer<GoogleMapController> _controller =
   //     Completer<GoogleMapController>();
   ValueNotifier<bool> searchBarVisible = ValueNotifier(false);
+  List<locAlarm> _locAlarms = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,8 +76,29 @@ class _HomepageState extends State<Homepage> {
             return Stack(
               children: [
                 GoogleMap(
+                    polylines:
+                        Set.from(List.generate(infantAlarm.length, (index) {
+                      return Polyline(
+                          points: infantAlarm["points"],
+                          polylineId: PolylineId(infantAlarm["id"]));
+                    })),
+                    polygons: Set.from(List.generate(
+                        _locAlarms.where((x) => x.isCircle == false).length,
+                        (index) {})),
+                    circles: Set.from(List.generate(
+                        _locAlarms.where((x) => x.isCircle == true).length,
+                        (index) {})),
                     onLongPress: (point) {
                       drawerController.open();
+                      if (!infantAlarm.containsKey("points")) {
+                        infantAlarm.addAll({
+                          "points": [point]
+                        });
+                      }
+                    },
+                    onTap: (point) {
+                      infantAlarm.update(
+                          "points", (update) => update.add(point));
                     },
                     onMapCreated: (controller) {
                       _controller.complete(controller);
@@ -213,6 +246,10 @@ Widget bottomDrawer(BuildContext context) {
             margin: EdgeInsets.all(10),
             child: ListTile(
               // tileColor: Colors.amber[100],
+              onTap: () {
+                drawerController.close();
+                infantAlarm.addAll({"isCircle": true});
+              },
               leading: Icon(
                 Icons.circle,
                 size: 40,
@@ -223,6 +260,10 @@ Widget bottomDrawer(BuildContext context) {
           Card(
             margin: EdgeInsets.all(10),
             child: ListTile(
+              onTap: () {
+                drawerController.close();
+                infantAlarm.addAll({"isCircle": false});
+              },
               leading: Icon(
                 Icons.polyline_outlined,
                 size: 40,
