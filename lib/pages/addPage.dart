@@ -36,7 +36,8 @@ class Addpage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Icon(Icons.attachment),
+                child:
+                    IconButton(onPressed: () {}, icon: Icon(Icons.attachment)),
               ),
             ),
           ],
