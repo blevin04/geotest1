@@ -83,12 +83,13 @@ class _HomepageState extends State<Homepage> {
                           polylines: infantAlarm["isCircle"] != true
                               ? Set.from(
                                   List.generate(infantAlarm.length, (index) {
-                                  if (infantAlarm["isCircle"] != true) {
+                                  if (infantAlarm["isCircle"] != true &&
+                                      infantAlarm["points"] != null) {
                                     return Polyline(
                                         points: infantAlarm["points"],
-                                        polylineId:
-                                            PolylineId(infantAlarm["id"]));
+                                        polylineId: PolylineId("00"));
                                   }
+                                  return Polyline(polylineId: PolylineId("pp"));
                                 }))
                               : {},
                           polygons: Set.from(List.generate(
@@ -120,15 +121,17 @@ class _HomepageState extends State<Homepage> {
                           },
                           onTap: (point) {
                             if (infantAlarm["isCircle"] != true) {
-                              infantAlarm.update(
-                                  "points", (update) => update.add(point));
+                              List prev = infantAlarm["points"];
+                              prev.add(point);
+                              // print(prev);
+                              infantAlarm["points"] = prev;
                             } else {
                               if (!infantAlarm.containsKey("points")) {
                                 _locAlarms.first.points = [point];
                                 newPoint.value++;
                               }
                             }
-
+                            newPoint.value++;
                             print(infantAlarm);
                           },
                           onMapCreated: (controller) {
