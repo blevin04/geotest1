@@ -41,6 +41,7 @@ dependencies:
   location: ^8.0.0
   google_places_flutter: ^2.1.0
   bottom_drawer: ^0.0.5
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:

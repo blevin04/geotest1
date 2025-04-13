@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geotest1/models.dart';
+import 'package:geotest1/pages/addPage.dart';
 import 'package:geotest1/utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
@@ -30,6 +31,7 @@ Future<void> _goTo(CameraPosition NewPos) async {
 Map infantAlarm = {};
 List<locAlarm> _locAlarms = [];
 ValueNotifier newPoint = ValueNotifier(0);
+ValueNotifier<bool> editing_ = ValueNotifier(false);
 
 class _HomepageState extends State<Homepage> {
   // final Completer<GoogleMapController> _controller =
@@ -75,6 +77,7 @@ class _HomepageState extends State<Homepage> {
               );
             }
             return Stack(
+              // alignment: Alignment.bottomCenter,
               children: [
                 ListenableBuilder(
                     listenable: newPoint,
@@ -232,19 +235,101 @@ class _HomepageState extends State<Homepage> {
                             )));
                   },
                 ),
-                bottomDrawer(context)
+                bottomDrawer(context),
+                ListenableBuilder(
+                    listenable: editing_,
+                    builder: (context, child) {
+                      return Visibility(
+                          visible: editing_.value,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                      onTap: () {
+                                        _locAlarms.removeLast();
+                                        infantAlarm.clear();
+                                        editing_.value = false;
+                                        newPoint.value++;
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            left: 15,
+                                            right: 15,
+                                            bottom: 5,
+                                            top: 5),
+                                        decoration: BoxDecoration(
+                                            border:
+                                                Border.all(color: Colors.grey),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: const Color.fromARGB(
+                                                92, 0, 0, 0)),
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            left: 15,
+                                            right: 15,
+                                            bottom: 5,
+                                            top: 5),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.transparent),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.blue),
+                                        child: Text(
+                                          "Next",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 18),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ));
+                    })
               ],
             );
           }),
       floatingActionButton: IconButton(
           onPressed: () {
-            if (isDrawerOpen) {
-              drawerController.close();
-              isDrawerOpen = false;
-            } else {
-              drawerController.open();
-              isDrawerOpen = true;
-            }
+            Navigator.push(
+                context,
+                (MaterialPageRoute(
+                    builder: (context) => Addpage(
+                        localarm: locAlarm(
+                            attachments: {},
+                            id: "ld",
+                            isCircle: true,
+                            message: "mesafeas",
+                            points: [],
+                            radius: 10)))));
+            // if (isDrawerOpen) {
+            //   drawerController.close();
+            //   isDrawerOpen = false;
+            // } else {
+            //   drawerController.open();
+            //   isDrawerOpen = true;
+            // }
           },
           icon: Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
@@ -294,6 +379,7 @@ Widget bottomDrawer(BuildContext context) {
                     radius: 10));
                 infantAlarm.addAll({"isCircle": true});
                 newPoint.value++;
+                editing_.value = true;
               },
               leading: Icon(
                 Icons.circle,
@@ -308,6 +394,7 @@ Widget bottomDrawer(BuildContext context) {
               onTap: () {
                 drawerController.close();
                 infantAlarm.addAll({"isCircle": false});
+                editing_.value = true;
               },
               leading: Icon(
                 Icons.polyline_outlined,
