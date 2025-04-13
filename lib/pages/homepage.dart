@@ -28,12 +28,13 @@ Future<void> _goTo(CameraPosition NewPos) async {
 }
 
 Map infantAlarm = {};
+List<locAlarm> _locAlarms = [];
+ValueNotifier newPoint = ValueNotifier(0);
 
 class _HomepageState extends State<Homepage> {
   // final Completer<GoogleMapController> _controller =
   //     Completer<GoogleMapController>();
   ValueNotifier<bool> searchBarVisible = ValueNotifier(false);
-  List<locAlarm> _locAlarms = [];
 
   @override
   void initState() {
@@ -75,40 +76,71 @@ class _HomepageState extends State<Homepage> {
             }
             return Stack(
               children: [
-                GoogleMap(
-                    polylines:
-                        Set.from(List.generate(infantAlarm.length, (index) {
-                      return Polyline(
-                          points: infantAlarm["points"],
-                          polylineId: PolylineId(infantAlarm["id"]));
-                    })),
-                    polygons: Set.from(List.generate(
-                        _locAlarms.where((x) => x.isCircle == false).length,
-                        (index) {})),
-                    circles: Set.from(List.generate(
-                        _locAlarms.where((x) => x.isCircle == true).length,
-                        (index) {})),
-                    onLongPress: (point) {
-                      drawerController.open();
-                      if (!infantAlarm.containsKey("points")) {
-                        infantAlarm.addAll({
-                          "points": [point]
-                        });
-                      }
-                    },
-                    onTap: (point) {
-                      infantAlarm.update(
-                          "points", (update) => update.add(point));
-                    },
-                    onMapCreated: (controller) {
-                      _controller.complete(controller);
-                    },
-                    myLocationButtonEnabled: true,
-                    myLocationEnabled: true,
-                    initialCameraPosition: CameraPosition(
-                        zoom: 18,
-                        target:
-                            LatLng(snapshot.data!.first, snapshot.data!.last))),
+                ListenableBuilder(
+                    listenable: newPoint,
+                    builder: (context, child) {
+                      return GoogleMap(
+                          polylines: infantAlarm["isCircle"] != true
+                              ? Set.from(
+                                  List.generate(infantAlarm.length, (index) {
+                                  if (infantAlarm["isCircle"] != true) {
+                                    return Polyline(
+                                        points: infantAlarm["points"],
+                                        polylineId:
+                                            PolylineId(infantAlarm["id"]));
+                                  }
+                                }))
+                              : {},
+                          polygons: Set.from(List.generate(
+                              _locAlarms
+                                  .where((x) => x.isCircle == false)
+                                  .length,
+                              (index) {})),
+                          circles: Set.from(List.generate(
+                              _locAlarms
+                                  .where((x) => x.isCircle == true)
+                                  .where((y) => y.points.isNotEmpty)
+                                  .length, (index) {
+                            // print("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+                            return Circle(
+                                center: _locAlarms[index].points.last,
+                                radius: 20,
+                                circleId: CircleId(
+                                  _locAlarms[index].id,
+                                ));
+                          })),
+                          onLongPress: (point) {
+                            drawerController.open();
+                            if (!infantAlarm.containsKey("points")) {
+                              infantAlarm.addAll({
+                                "points": [point]
+                              });
+                            }
+                            print(infantAlarm);
+                          },
+                          onTap: (point) {
+                            if (infantAlarm["isCircle"] != true) {
+                              infantAlarm.update(
+                                  "points", (update) => update.add(point));
+                            } else {
+                              if (!infantAlarm.containsKey("points")) {
+                                _locAlarms.first.points = [point];
+                                newPoint.value++;
+                              }
+                            }
+
+                            print(infantAlarm);
+                          },
+                          onMapCreated: (controller) {
+                            _controller.complete(controller);
+                          },
+                          myLocationButtonEnabled: true,
+                          myLocationEnabled: true,
+                          initialCameraPosition: CameraPosition(
+                              zoom: 18,
+                              target: LatLng(
+                                  snapshot.data!.first, snapshot.data!.last)));
+                    }),
                 ListenableBuilder(
                   listenable: searchBarVisible,
                   builder: (context, child) {
@@ -248,7 +280,17 @@ Widget bottomDrawer(BuildContext context) {
               // tileColor: Colors.amber[100],
               onTap: () {
                 drawerController.close();
+                _locAlarms.add(locAlarm(
+                    attachments: {},
+                    id: "pp",
+                    isCircle: true,
+                    message: "",
+                    points: infantAlarm.containsKey("points")
+                        ? infantAlarm["points"]
+                        : [],
+                    radius: 10));
                 infantAlarm.addAll({"isCircle": true});
+                newPoint.value++;
               },
               leading: Icon(
                 Icons.circle,
