@@ -2,6 +2,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:geotest1/models.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -56,4 +57,28 @@ Future<Attachment> getContent(BuildContext context, FileType filetype) async {
     showsnackbar(context, 'no file chossen');
   }
   return Attachment(fileType: newl, path: content);
+}
+
+void showcircularProgressIndicator(BuildContext context) async {
+  return await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return const Dialog(
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      });
+}
+
+Future<bool> addLocAlarm(locAlarm newLoc) async {
+  await Hive.openBox("LocAlarms");
+  if (Hive.box("LocAlarms").isOpen) {
+    Box localarmsBox = Hive.box("LocAlarms");
+    localarmsBox.add(newLoc);
+  }
+  return false;
+  ;
 }

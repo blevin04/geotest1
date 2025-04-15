@@ -125,7 +125,9 @@ class Addpage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                bool completed = false;
+              },
               child: Container(
                 padding:
                     EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
