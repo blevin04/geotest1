@@ -23,10 +23,10 @@ BottomDrawerController drawerController = BottomDrawerController();
 bool isDrawerOpen = false;
 final Completer<GoogleMapController> _controller =
     Completer<GoogleMapController>();
-Future<void> _goTo(CameraPosition NewPos) async {
-  final GoogleMapController controller = await _controller.future;
-  await controller.animateCamera(CameraUpdate.newCameraPosition(NewPos));
-}
+// Future<void> _goTo(CameraPosition NewPos) async {
+//   final GoogleMapController controller = await _controller.future;
+//   await controller.animateCamera(CameraUpdate.newCameraPosition(NewPos));
+// }
 
 Map infantAlarm = {};
 List<locAlarm> _locAlarms = [];
@@ -107,6 +107,8 @@ class _HomepageState extends State<Homepage> {
                                   .length, (index) {
                             // print("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
                             return Circle(
+                                consumeTapEvents: true,
+                                onTap: () {},
                                 center: _locAlarms[index].points.last,
                                 radius: 20,
                                 circleId: CircleId(
@@ -125,13 +127,16 @@ class _HomepageState extends State<Homepage> {
                           onTap: (point) {
                             if (infantAlarm["isCircle"] != true) {
                               List prev = infantAlarm["points"];
+                              // List prev = [];
                               prev.add(point);
                               // print(prev);
                               infantAlarm["points"] = prev;
                             } else {
                               if (!infantAlarm.containsKey("points")) {
-                                _locAlarms.first.points = [point];
-                                newPoint.value++;
+                                _locAlarms.last.points = [point];
+                                // newPoint.value++;
+                              } else {
+                                _locAlarms.last.points = [point];
                               }
                             }
                             newPoint.value++;
@@ -281,6 +286,14 @@ class _HomepageState extends State<Homepage> {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            (MaterialPageRoute(
+                                                builder: (context) => Addpage(
+                                                    localarm:
+                                                        _locAlarms.last))));
+                                      },
                                       child: Container(
                                         padding: EdgeInsets.only(
                                             left: 15,

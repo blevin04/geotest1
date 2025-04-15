@@ -1,6 +1,13 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:geotest1/models.dart';
 import 'package:geotest1/pages/homepage.dart';
+import 'package:geotest1/utils.dart';
+
+List<Attachment> attachments = List.empty(growable: true);
+ValueNotifier newStuff = ValueNotifier(0);
 
 class Addpage extends StatelessWidget {
   final locAlarm localarm;
@@ -32,13 +39,61 @@ class Addpage extends StatelessWidget {
             Text("Attachments"),
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child:
-                    IconButton(onPressed: () {}, icon: Icon(Icons.attachment)),
-              ),
+              child: ListenableBuilder(
+                  listenable: newStuff,
+                  builder: (context, child) {
+                    return Container(
+                      padding: EdgeInsets.all(5),
+                      width: MediaQuery.of(context).size.width - 20,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          GridView.builder(
+                            shrinkWrap: true,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2, childAspectRatio: 2),
+                            itemCount: attachments.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              print(attachments.last.path);
+                              print(attachments.first.fileType);
+                              if (attachments[index].fileType ==
+                                  FileType.image) {
+                                return Image(
+                                    image: FileImage(
+                                        File(attachments[index].path)));
+                              }
+                              if (attachments[index].fileType ==
+                                  FileType.video) {
+                                return Container();
+                              }
+                              return Container();
+                            },
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: IconButton(
+                                onPressed: () async {
+                                  attachments.add(
+                                      await getContent(context, FileType.any));
+                                  newStuff.value++;
+                                },
+                                icon: Icon(
+                                  Icons.attachment,
+                                  color: Colors.black,
+                                )),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
             ),
           ],
         ),

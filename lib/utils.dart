@@ -1,7 +1,7 @@
 // import 'package:geofence_foreground_service/exports.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:geotest1/models.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -19,7 +19,7 @@ showsnackbar(BuildContext context, String content) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(content)));
 }
 
-Future<String> getContent(BuildContext context, FileType filetype) async {
+Future<Attachment> getContent(BuildContext context, FileType filetype) async {
   String content = "";
   Permission.accessMediaLocation.onDeniedCallback(() async {
     Permission.accessMediaLocation.request();
@@ -33,12 +33,27 @@ Future<String> getContent(BuildContext context, FileType filetype) async {
 
   FilePickerResult? result = (await FilePicker.platform
       .pickFiles(type: filetype, allowMultiple: false));
+  FileType newl = FileType.values[0];
   if (result != null) {
     content = result.files.single.path!;
+    if (content.endsWith("png") ||
+        content.endsWith("jpeg") ||
+        content.endsWith("jpg")) {
+      newl = FileType.image;
+    }
+    if (content.endsWith("mp4")) {
+      newl = FileType.video;
+    }
+    if (content.endsWith("docs") || content.endsWith("pdf")) {
+      newl = FileType.values[104];
+    }
+    if (content.endsWith("mp3")) {
+      newl = FileType.audio;
+    }
     // setState(() {});
   }
   if (result == null) {
     showsnackbar(context, 'no file chossen');
   }
-  return content;
+  return Attachment(fileType: newl, path: content);
 }
