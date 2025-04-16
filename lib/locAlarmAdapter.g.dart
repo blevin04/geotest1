@@ -6,28 +6,28 @@ part of 'locAlarmAdapter.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class locAlarmAdapter extends TypeAdapter<locAlarm> {
+class locAlarmNAdapter extends TypeAdapter<locAlarmN> {
   @override
   final int typeId = 1;
 
   @override
-  locAlarm read(BinaryReader reader) {
+  locAlarmN read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return locAlarm(
-      attachments: (fields[5] as Map).cast<dynamic, dynamic>(),
+    return locAlarmN(
+      attachments: (fields[5] as List).cast<dynamic>(),
       id: fields[0] as String,
       isCircle: fields[2] as bool,
       message: fields[4] as String,
-      points: (fields[1] as List).cast<LatLng>(),
+      points: (fields[1] as List).cast<dynamic>(),
       radius: fields[3] as double,
     );
   }
 
   @override
-  void write(BinaryWriter writer, locAlarm obj) {
+  void write(BinaryWriter writer, locAlarmN obj) {
     writer
       ..writeByte(6)
       ..writeByte(0)
@@ -50,7 +50,7 @@ class locAlarmAdapter extends TypeAdapter<locAlarm> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is locAlarmAdapter &&
+      other is locAlarmNAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

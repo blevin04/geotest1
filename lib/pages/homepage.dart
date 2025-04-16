@@ -325,24 +325,24 @@ class _HomepageState extends State<Homepage> {
           }),
       floatingActionButton: IconButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                (MaterialPageRoute(
-                    builder: (context) => Addpage(
-                        localarm: locAlarm(
-                            attachments: [],
-                            id: "ld",
-                            isCircle: true,
-                            message: "mesafeas",
-                            points: [],
-                            radius: 10)))));
-            // if (isDrawerOpen) {
-            //   drawerController.close();
-            //   isDrawerOpen = false;
-            // } else {
-            //   drawerController.open();
-            //   isDrawerOpen = true;
-            // }
+            // Navigator.push(
+            //     context,
+            //     (MaterialPageRoute(
+            //         builder: (context) => Addpage(
+            //             localarm: locAlarm(
+            //                 attachments: [],
+            //                 id: "ld",
+            //                 isCircle: true,
+            //                 message: "mesafeas",
+            //                 points: [],
+            //                 radius: 10)))));
+            if (isDrawerOpen) {
+              drawerController.close();
+              isDrawerOpen = false;
+            } else {
+              drawerController.open();
+              isDrawerOpen = true;
+            }
           },
           icon: Padding(
             padding: const EdgeInsets.only(bottom: 20.0),

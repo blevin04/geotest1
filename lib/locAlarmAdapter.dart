@@ -1,16 +1,16 @@
-import 'package:geofence_foreground_service/exports.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive/hive.dart';
 
 part 'locAlarmAdapter.g.dart';
 
 @HiveType(typeId: 1) // Give a unique ID
 
-class locAlarm extends HiveObject {
+class locAlarmN extends HiveObject {
   @HiveField(0)
   String id;
 
   @HiveField(1)
-  List<LatLng> points;
+  List points;
 
   @HiveField(2)
   bool isCircle;
@@ -22,9 +22,9 @@ class locAlarm extends HiveObject {
   String message;
 
   @HiveField(5)
-  Map attachments;
+  List attachments;
 
-  locAlarm(
+  locAlarmN(
       {required this.attachments,
       required this.id,
       required this.isCircle,

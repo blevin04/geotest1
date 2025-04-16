@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geotest1/models.dart';
 import 'package:geotest1/pages/homepage.dart';
 import 'package:geotest1/utils.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 List<Attachment> attachments = List.empty(growable: true);
@@ -132,7 +133,19 @@ class Addpage extends StatelessWidget {
               onTap: () async {
                 int completed = 104;
                 locAlarm newLoc = locAlarm(
-                    attachments: attachments,
+                    attachments: List.generate(attachments.length, (index) {
+                      String type = "";
+                      if (attachments[index].fileType == FileType.audio) {
+                        type = "audio";
+                      }
+                      if (attachments[index].fileType == FileType.image) {
+                        type = "image";
+                      }
+                      if (attachments[index].fileType == FileType.video) {
+                        type = "video";
+                      }
+                      return [attachments[index].path, type];
+                    }),
                     id: Uuid().v1(),
                     isCircle: localarm.isCircle,
                     message: messageController.text,
@@ -143,6 +156,8 @@ class Addpage extends StatelessWidget {
                   completed = await addLocAlarm(newLoc);
                 }
                 Navigator.pop(context);
+
+                print(Hive.box("LocAlarms"));
               },
               child: Container(
                 padding:
