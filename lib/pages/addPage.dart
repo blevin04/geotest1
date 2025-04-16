@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:geotest1/models.dart';
 import 'package:geotest1/pages/homepage.dart';
 import 'package:geotest1/utils.dart';
+import 'package:uuid/uuid.dart';
 
 List<Attachment> attachments = List.empty(growable: true);
+
 ValueNotifier newStuff = ValueNotifier(0);
+
+TextEditingController messageController = TextEditingController();
 
 class Addpage extends StatelessWidget {
   final locAlarm localarm;
@@ -25,7 +29,7 @@ class Addpage extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: TextField(
                 // expands: true,
-                controller: controller,
+                controller: messageController,
                 maxLines: null,
                 // minLines: null,
                 decoration: InputDecoration(
@@ -125,8 +129,20 @@ class Addpage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: () {
-                bool completed = false;
+              onTap: () async {
+                int completed = 104;
+                locAlarm newLoc = locAlarm(
+                    attachments: attachments,
+                    id: Uuid().v1(),
+                    isCircle: localarm.isCircle,
+                    message: messageController.text,
+                    points: localarm.points,
+                    radius: localarm.radius);
+                showcircularProgressIndicator(context);
+                while (completed == 104) {
+                  completed = await addLocAlarm(newLoc);
+                }
+                Navigator.pop(context);
               },
               child: Container(
                 padding:

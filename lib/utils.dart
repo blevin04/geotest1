@@ -73,12 +73,12 @@ void showcircularProgressIndicator(BuildContext context) async {
       });
 }
 
-Future<bool> addLocAlarm(locAlarm newLoc) async {
+Future<int> addLocAlarm(locAlarm newLoc) async {
   await Hive.openBox("LocAlarms");
   if (Hive.box("LocAlarms").isOpen) {
     Box localarmsBox = Hive.box("LocAlarms");
     localarmsBox.add(newLoc);
+    return 0;
   }
-  return false;
-  ;
+  return 1;
 }

@@ -330,7 +330,7 @@ class _HomepageState extends State<Homepage> {
                 (MaterialPageRoute(
                     builder: (context) => Addpage(
                         localarm: locAlarm(
-                            attachments: {},
+                            attachments: [],
                             id: "ld",
                             isCircle: true,
                             message: "mesafeas",
@@ -382,7 +382,7 @@ Widget bottomDrawer(BuildContext context) {
               onTap: () {
                 drawerController.close();
                 _locAlarms.add(locAlarm(
-                    attachments: {},
+                    attachments: [],
                     id: "pp",
                     isCircle: true,
                     message: "",

@@ -7,7 +7,7 @@ class locAlarm {
   bool isCircle;
   double radius;
   String message;
-  Map attachments;
+  List attachments;
 
   locAlarm(
       {required this.attachments,
