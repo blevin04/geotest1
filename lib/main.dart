@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geotest1/attachmentAdapter.dart';
 import 'package:geotest1/geofenceHandler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geotest1/locAlarmAdapter.dart';
 import 'package:geotest1/notificationHander.dart';
 import 'package:geotest1/pages/homepage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -21,7 +22,7 @@ void main() async {
   const InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  Hive.registerAdapter(AttachmentsAdapter());
+  Hive.registerAdapter(locAlarmAdapter());
   runApp(const MyApp());
 }
 
