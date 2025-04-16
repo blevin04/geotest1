@@ -3,9 +3,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:geotest1/locAlarmAdapter.dart';
 import 'package:geotest1/models.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:location/location.dart' hide LatLng;
+import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 final location0 = Location();
@@ -78,7 +77,7 @@ void showcircularProgressIndicator(BuildContext context) async {
 Future<int> addLocAlarm(locAlarm newLoc) async {
   await Hive.openBox("LocAlarms");
   if (Hive.box("LocAlarms").isOpen) {
-    print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+    // print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
     locAlarmN locNew = locAlarmN(
         attachments: newLoc.attachments,
         id: newLoc.id,
