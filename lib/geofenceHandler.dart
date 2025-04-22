@@ -20,8 +20,7 @@ void callbackDispatcher() async {
         log('enter!', name: 'triggerType');
         if (sendPort != null) {
           // The port might be null if the main isolate is not running.
-
-          sendPort.send("entered");
+          sendPort.send([zoneID, "entered "]);
           print("notdamn");
         } else {
           print("damn");
@@ -31,7 +30,7 @@ void callbackDispatcher() async {
         if (sendPort != null) {
           // The port might be null if the main isolate is not running.
           print("notdamn");
-          sendPort.send("exited");
+          sendPort.send([zoneID, "exited "]);
         } else {
           print("damn");
         }
@@ -40,7 +39,7 @@ void callbackDispatcher() async {
         if (sendPort != null) {
           // The port might be null if the main isolate is not running.
           print("notdamn");
-          sendPort.send("dwelling");
+          sendPort.send([zoneID, "dwelling in "]);
         } else {
           print("damn");
         }
@@ -48,10 +47,10 @@ void callbackDispatcher() async {
         log('unknown', name: 'triggerType');
         if (sendPort != null) {
           // The port might be null if the main isolate is not running.
-          print("notdamn");
-          sendPort.send("unknownn");
+          // print("notdamn");
+          sendPort.send([zoneID, "unknownn"]);
         } else {
-          print("damn");
+          // print("damn");
         }
       }
       return Future.value(true);
@@ -59,32 +58,53 @@ void callbackDispatcher() async {
   );
 }
 
-final List<LatLng> timesSquarePolygon = [
-  LatLng(Angle.degree(-0.599188), Angle.degree(37.888460)),
-];
-
 Future<void> initPlatformState() async {
   // Remember to handle permissions before initiating the plugin
   await permission0.Permission.location.request();
   await permission0.Permission.locationAlways.request();
   await permission0.Permission.notification.request();
-
-  bool hasServiceStarted =
-      await GeofenceForegroundService().startGeofencingService(
+  await GeofenceForegroundService().startGeofencingService(
     contentTitle: 'Localarm is running background',
     contentText: 'This is to bring you prompt notifications on location change',
     notificationChannelId: 'com.app.geofencing_notifications_channel',
     serviceId: 525600,
     callbackDispatcher: callbackDispatcher,
   );
+}
 
-  if (hasServiceStarted) {
-    await GeofenceForegroundService().addGeofenceZone(
-      zone: Zone(
-        id: 'zone#1_id',
-        radius: 100, // measured in meters
-        coordinates: timesSquarePolygon,
-      ),
-    );
+Future<int> addGeofence(
+    List<LatLng> coordinates_, String id, double rad) async {
+  try {
+    bool serviceRunning =
+        await GeofenceForegroundService().isForegroundServiceRunning();
+    if (serviceRunning) {
+      await GeofenceForegroundService().addGeofenceZone(
+        zone: Zone(
+          id: id,
+          radius: rad, // measured in meters
+          coordinates: coordinates_,
+        ),
+      );
+    } else {
+      await GeofenceForegroundService().startGeofencingService(
+        contentTitle: 'Localarm is running background',
+        contentText:
+            'This is to bring you prompt notifications on location change',
+        notificationChannelId: 'com.app.geofencing_notifications_channel',
+        serviceId: 525600,
+        callbackDispatcher: callbackDispatcher,
+      );
+      await GeofenceForegroundService().addGeofenceZone(
+        zone: Zone(
+          id: id,
+          radius: rad, // measured in meters
+          coordinates: coordinates_,
+        ),
+      );
+    }
+    return 0;
+  } catch (e) {
+    print(e.toString());
+    return 1;
   }
 }

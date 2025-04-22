@@ -43,21 +43,28 @@ class _MyAppState extends State<MyApp> {
       IsolateNameServer.registerPortWithName(port.sendPort, "EventChange");
     }
     port.listen(onDone: () {
-      print("ok mtf");
+      // print("ok mtf");
     }, (dynamic data) async {
-      print(data);
-      if (data == "entered") {
-        showNotification("Entered Location",
-            "You entered the assigned location at 0000hrs", "");
-      }
-      if (data == "exited") {
-        showNotification("Left the Location",
-            "You left the assigned location at 0000hrs", "");
-      }
-      if (data == "dwelling") {
-        showNotification("Currently in the location",
-            "You are currently inside the assigned location", '');
-      }
+      // print(data);
+      String locId = data.first;
+      await Hive.openBox("LocAlarms");
+      var allLocs = Hive.box("LocAlarms").toMap();
+      allLocs.forEach((key, value) async {
+        if (value.id == locId) {
+          List<String> attch = value.attachments;
+          String imgs = "";
+
+          attch.forEach((value0) {
+            if (value0.endsWith("jpg") ||
+                value0.endsWith("png") ||
+                value0.endsWith("jpeg")) {
+              imgs = (value);
+            }
+          });
+          String action = data.last;
+          await showNotification("$action Location!", value.message, imgs);
+        }
+      });
     });
   }
 

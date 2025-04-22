@@ -1,6 +1,8 @@
 // import 'package:geofence_foreground_service/exports.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:geofence_foreground_service/exports.dart';
+import 'package:geotest1/geofenceHandler.dart';
 import 'package:geotest1/locAlarmAdapter.dart';
 import 'package:geotest1/models.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -92,6 +94,14 @@ Future<int> addLocAlarm(locAlarm newLoc) async {
         radius: newLoc.radius);
     Box localarmsBox = Hive.box("LocAlarms");
     localarmsBox.add(locNew);
+    List<LatLng> nee = List.generate(newLoc.points.length, (index) {
+      return LatLng.degree(
+          newLoc.points[index].latitude, newLoc.points[index].longitude);
+    });
+    int passed = await addGeofence(nee, newLoc.id, newLoc.radius);
+    if (passed != 0) {
+      await localarmsBox.delete(localarmsBox.keys.last);
+    }
     return 0;
   }
   return 1;
