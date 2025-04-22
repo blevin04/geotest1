@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geotest1/locAlarmAdapter.dart';
 import 'package:geotest1/models.dart';
 import 'package:geotest1/pages/addPage.dart';
 import 'package:geotest1/utils.dart';
@@ -9,6 +10,7 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/place_type.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -29,7 +31,7 @@ final Completer<GoogleMapController> _controller =
 // }
 
 Map infantAlarm = {};
-List<locAlarm> _locAlarms = [];
+List<locAlarmN> _locAlarms = [];
 ValueNotifier newPoint = ValueNotifier(0);
 ValueNotifier<bool> editing_ = ValueNotifier(false);
 
@@ -41,12 +43,19 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     // TODO: implement initState
-
+    Hive.box("LocAlarms").listenable().addListener(() {
+      Box box = Hive.box("LocAlarms");
+      box.toMap().forEach((key, value) {
+        _locAlarms.add(value);
+      });
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+    print(Hive.box("LocAlarms").values.last.message);
     return Scaffold(
       appBar: AppBar(
         title: Text("LocAlarm"),
@@ -107,6 +116,9 @@ class _HomepageState extends State<Homepage> {
                                   .length, (index) {
                             // print("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
                             return Circle(
+                                strokeColor: _locAlarms[index].message.isEmpty
+                                    ? Colors.green
+                                    : Colors.black,
                                 consumeTapEvents: true,
                                 onTap: () {},
                                 center: _locAlarms[index].points.last,
@@ -381,7 +393,7 @@ Widget bottomDrawer(BuildContext context) {
               // tileColor: Colors.amber[100],
               onTap: () {
                 drawerController.close();
-                _locAlarms.add(locAlarm(
+                _locAlarms.add(locAlarmN(
                     attachments: [],
                     id: "pp",
                     isCircle: true,

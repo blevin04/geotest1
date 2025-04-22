@@ -21,6 +21,7 @@ void main() async {
   const InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await Hive.openBox("LocAlarms");
   Hive.registerAdapter(locAlarmNAdapter());
   runApp(const MyApp());
 }
@@ -45,7 +46,7 @@ class _MyAppState extends State<MyApp> {
     port.listen(onDone: () {
       // print("ok mtf");
     }, (dynamic data) async {
-      // print(data);
+      print(data);
       String locId = data.first;
       await Hive.openBox("LocAlarms");
       var allLocs = Hive.box("LocAlarms").toMap();

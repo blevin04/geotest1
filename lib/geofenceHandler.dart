@@ -104,6 +104,7 @@ Future<int> addGeofence(
     }
     return 0;
   } catch (e) {
+    print(".......................................................");
     print(e.toString());
     return 1;
   }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:geotest1/locAlarmAdapter.dart';
 import 'package:geotest1/models.dart';
 import 'package:geotest1/utils.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -14,7 +15,7 @@ ValueNotifier newStuff = ValueNotifier(0);
 TextEditingController messageController = TextEditingController();
 
 class Addpage extends StatelessWidget {
-  final locAlarm localarm;
+  final locAlarmN localarm;
   const Addpage({super.key, required this.localarm});
 
   @override
@@ -131,7 +132,7 @@ class Addpage extends StatelessWidget {
             child: InkWell(
               onTap: () async {
                 int completed = 104;
-                locAlarm newLoc = locAlarm(
+                locAlarmN newLoc = locAlarmN(
                     attachments: List.generate(attachments.length, (index) {
                       String type = "";
                       if (attachments[index].fileType == FileType.audio) {
