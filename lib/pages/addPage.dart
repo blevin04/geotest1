@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:geotest1/locAlarmAdapter.dart';
 import 'package:geotest1/models.dart';
+import 'package:geotest1/pages/homepage.dart';
 import 'package:geotest1/utils.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -156,8 +157,11 @@ class Addpage extends StatelessWidget {
                   completed = await addLocAlarm(newLoc);
                 }
                 Navigator.pop(context);
-
-                print(Hive.box("LocAlarms"));
+                attachments.clear();
+                messageController.clear();
+                editing_.value = false;
+                Navigator.pop(context);
+                // print(Hive.box("LocAlarms"));
               },
               child: Container(
                 padding:

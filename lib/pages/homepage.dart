@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geotest1/locAlarmAdapter.dart';
-import 'package:geotest1/models.dart';
 import 'package:geotest1/pages/addPage.dart';
 import 'package:geotest1/utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -43,19 +42,24 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     // TODO: implement initState
+    print(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+    Hive.box("LocAlarms").values.forEach((x) {
+      _locAlarms.add(x);
+    });
     Hive.box("LocAlarms").listenable().addListener(() {
       Box box = Hive.box("LocAlarms");
       box.toMap().forEach((key, value) {
         _locAlarms.add(value);
       });
     });
+    print(_locAlarms.length);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
-    print(Hive.box("LocAlarms").values.last.message);
+    // print(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+    // print(Hive.box("LocAlarms").values.last.message);
     return Scaffold(
       appBar: AppBar(
         title: Text("LocAlarm"),
@@ -80,6 +84,8 @@ class _HomepageState extends State<Homepage> {
           future: currentLocation(),
           // initialData: LatLng(Angle.degree(0), Angle.degree(0)),
           builder: (context, snapshot) {
+            // print(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+            // print(Hive.box("LocAlarms").values.first.isCircle);
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -121,7 +127,9 @@ class _HomepageState extends State<Homepage> {
                                     : Colors.black,
                                 consumeTapEvents: true,
                                 onTap: () {},
-                                center: _locAlarms[index].points.last,
+                                center: LatLng(
+                                    _locAlarms[index].points.last.first,
+                                    _locAlarms[index].points.last.last),
                                 radius: 20,
                                 circleId: CircleId(
                                   _locAlarms[index].id,
