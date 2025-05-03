@@ -104,7 +104,15 @@ class _HomepageState extends State<Homepage> {
                                   if (infantAlarm["isCircle"] != true &&
                                       infantAlarm["points"] != null) {
                                     return Polyline(
-                                        points: infantAlarm["points"],
+                                        points: List.generate(
+                                            infantAlarm["points"].length,
+                                            (index) {
+                                          return LatLng(
+                                              infantAlarm["points"][index]
+                                                  .first,
+                                              infantAlarm["points"][index]
+                                                  .last);
+                                        }),
                                         polylineId: PolylineId("00"));
                                   }
                                   return Polyline(polylineId: PolylineId("pp"));
@@ -113,8 +121,19 @@ class _HomepageState extends State<Homepage> {
                           polygons: Set.from(List.generate(
                               _locAlarms
                                   .where((x) => x.isCircle == false)
-                                  .length,
-                              (index) {})),
+                                  .length, (index) {
+                            List<locAlarmN> polyData = _locAlarms
+                                .where((x) => x.isCircle == false)
+                                .toList();
+                            Polygon(
+                                polygonId: PolygonId(polyData[index].id),
+                                points: List.generate(
+                                    polyData[index].points.length, (index0) {
+                                  return LatLng(
+                                      polyData[index].points[index0].first,
+                                      polyData[index].points[index0].last);
+                                }));
+                          })),
                           circles: Set.from(List.generate(
                               _locAlarms
                                   .where((x) => x.isCircle == true)
@@ -139,7 +158,9 @@ class _HomepageState extends State<Homepage> {
                             drawerController.open();
                             if (!infantAlarm.containsKey("points")) {
                               infantAlarm.addAll({
-                                "points": [point]
+                                "points": [
+                                  [point.latitude, point.longitude]
+                                ]
                               });
                             }
                             print(infantAlarm);
@@ -148,15 +169,19 @@ class _HomepageState extends State<Homepage> {
                             if (infantAlarm["isCircle"] != true) {
                               List prev = infantAlarm["points"];
                               // List prev = [];
-                              prev.add(point);
+                              prev.add([point.latitude, point.longitude]);
                               // print(prev);
                               infantAlarm["points"] = prev;
                             } else {
                               if (!infantAlarm.containsKey("points")) {
-                                _locAlarms.last.points = [point];
+                                _locAlarms.last.points = [
+                                  [point.latitude, point.longitude]
+                                ];
                                 // newPoint.value++;
                               } else {
-                                _locAlarms.last.points = [point];
+                                _locAlarms.last.points = [
+                                  [point.latitude, point.longitude]
+                                ];
                               }
                             }
                             newPoint.value++;

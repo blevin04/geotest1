@@ -102,6 +102,7 @@ Future<int> addGeofence(
         ),
       );
     }
+    print("success");
     return 0;
   } catch (e) {
     print(".......................................................");
