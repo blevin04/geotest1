@@ -23,7 +23,7 @@ void main() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   Hive.registerAdapter(locAlarmNAdapter());
-  Hive.openBox("LocAlarms");
+  await Hive.openBox("LocAlarms");
   runApp(const MyApp());
 }
 

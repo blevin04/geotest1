@@ -6,7 +6,6 @@ import 'package:geotest1/locAlarmAdapter.dart';
 import 'package:geotest1/models.dart';
 import 'package:geotest1/pages/homepage.dart';
 import 'package:geotest1/utils.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 List<Attachment> attachments = List.empty(growable: true);
@@ -122,7 +121,7 @@ class Addpage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     color: const Color.fromARGB(92, 0, 0, 0)),
                 child: Text(
-                  "Cancel",
+                  "back",
                   style: TextStyle(fontSize: 20),
                 ),
               ),

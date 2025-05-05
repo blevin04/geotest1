@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:geotest1/locAlarmAdapter.dart';
 import 'package:geotest1/pages/addPage.dart';
 import 'package:geotest1/utils.dart';
@@ -79,7 +78,13 @@ class _HomepageState extends State<Homepage> {
               })
         ],
       ),
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: IconButton(
+            onPressed: () async {
+              // await active();
+            },
+            icon: Icon(Icons.abc)),
+      ),
       body: FutureBuilder(
           future: currentLocation(),
           // initialData: LatLng(Angle.degree(0), Angle.degree(0)),
@@ -233,6 +238,15 @@ class _HomepageState extends State<Homepage> {
                                 } else {
                                   print("shiiiittttttttt");
                                 }
+                                double lat = double.parse(prediction.lat!);
+                                double lng = double.parse(prediction.lng!);
+                                print("$lat,$lng");
+                                // final newposition =
+                                //     LatLng(-1.2920659, 36.8219462);
+                                // await _controller.future.then((onValue) async {
+                                //   await onValue.animateCamera(
+                                //       CameraUpdate.newLatLng(newposition));
+                                // });
                                 await _controller.future.then((onValue) async {
                                   await onValue.animateCamera(
                                       CameraUpdate.newCameraPosition(
@@ -240,9 +254,10 @@ class _HomepageState extends State<Homepage> {
                                               zoom: 18,
                                               tilt: 59.8890,
                                               bearing: 0,
-                                              target: LatLng(
-                                                  -1.3106691, 36.8250274))));
+                                              target: LatLng(lat, lng))));
+                                  _controller.complete(onValue);
                                 });
+
                                 // showDialog(
                                 //     context: context,
                                 //     builder: (context) {

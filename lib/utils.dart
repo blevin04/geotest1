@@ -85,20 +85,17 @@ Future<int> addLocAlarm(locAlarmN newLoc) async {
         id: newLoc.id,
         isCircle: newLoc.isCircle,
         message: newLoc.message,
-        points: List.generate(newLoc.points.length, (index) {
-          return [
-            newLoc.points[index].latitude,
-            newLoc.points[index].longitude
-          ];
-        }),
+        points: newLoc.points,
         radius: newLoc.radius);
     Box localarmsBox = Hive.box("LocAlarms");
     localarmsBox.add(locNew);
+    // print("added");
     List<LatLng> nee = List.generate(newLoc.points.length, (index) {
       return LatLng.degree(
-          newLoc.points[index].latitude, newLoc.points[index].longitude);
+          newLoc.points[index].first, newLoc.points[index].last);
     });
     int passed = await addGeofence(nee, newLoc.id, newLoc.radius);
+    // print("geofence.......................");
     if (passed != 0) {
       await localarmsBox.delete(localarmsBox.keys.last);
     }
