@@ -46,23 +46,26 @@ class _MyAppState extends State<MyApp> {
       IsolateNameServer.registerPortWithName(port.sendPort, "EventChange");
     }
 
-    port.listen(onDone: () {
-      // print("ok mtf");
+    port.listen(onError: (e) {
+      print(e.toString());
+    }, onDone: () {
+      print("ok mtf");
     }, (dynamic data) async {
-      // print(data);
+      print(data);
       String locId = data.first;
       await Hive.openBox("LocAlarms");
       var allLocs = Hive.box("LocAlarms").toMap();
+      if (allLocs.isEmpty) {
+        await showNotification("Test", "This is the notification ", " ");
+      }
       allLocs.forEach((key, value) async {
         if (value.id == locId) {
-          List<String> attch = value.attachments;
+          List<dynamic> attch = value.attachments;
           String imgs = "";
 
           attch.forEach((value0) {
-            if (value0.endsWith("jpg") ||
-                value0.endsWith("png") ||
-                value0.endsWith("jpeg")) {
-              imgs = (value);
+            if (value0.first == "image") {
+              imgs = (value0.last);
             }
           });
           String action = data.last;

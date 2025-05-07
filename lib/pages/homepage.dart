@@ -351,8 +351,18 @@ class _HomepageState extends State<Homepage> {
                                             context,
                                             (MaterialPageRoute(
                                                 builder: (context) => Addpage(
-                                                    localarm:
-                                                        _locAlarms.last))));
+                                                    localarm: infantAlarm[
+                                                                "isCircle"] ==
+                                                            true
+                                                        ? _locAlarms.last
+                                                        : locAlarmN(
+                                                            attachments: [],
+                                                            id: "",
+                                                            isCircle: false,
+                                                            message: "",
+                                                            points: infantAlarm[
+                                                                "points"],
+                                                            radius: 10)))));
                                       },
                                       child: Container(
                                         padding: EdgeInsets.only(

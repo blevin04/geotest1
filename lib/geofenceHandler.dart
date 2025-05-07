@@ -14,8 +14,9 @@ void callbackDispatcher() async {
 
   GeofenceForegroundService().handleTrigger(
     backgroundTriggerHandler: (zoneID, triggerType) {
-      final sendPort = IsolateNameServer.lookupPortByName("EventChange");
       log(zoneID, name: 'zoneID');
+      final sendPort = IsolateNameServer.lookupPortByName("EventChange");
+      log(sendPort.toString());
       if (triggerType == GeofenceEventType.enter) {
         log('enter!', name: 'triggerType');
         if (sendPort != null) {
@@ -70,6 +71,9 @@ Future<void> initPlatformState() async {
     serviceId: 525600,
     callbackDispatcher: callbackDispatcher,
   );
+  await addGeofence([
+    LatLng(Angle.degree(-0.3949068884185996), Angle.degree(36.96352411061525))
+  ], "testid0", 25);
 }
 
 Future<int> addGeofence(
@@ -78,13 +82,16 @@ Future<int> addGeofence(
     bool serviceRunning =
         await GeofenceForegroundService().isForegroundServiceRunning();
     if (serviceRunning) {
-      await GeofenceForegroundService().addGeofenceZone(
+      print("startinnng..................");
+      bool state = await GeofenceForegroundService().addGeofenceZone(
         zone: Zone(
           id: id,
           radius: rad, // measured in meters
           coordinates: coordinates_,
         ),
       );
+      print(state);
+      print("donneeeeeeeeeeeeeeeeeeee");
     } else {
       await GeofenceForegroundService().startGeofencingService(
         contentTitle: 'Localarm is running background',

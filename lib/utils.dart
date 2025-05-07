@@ -94,7 +94,7 @@ Future<int> addLocAlarm(locAlarmN newLoc) async {
       return LatLng.degree(
           newLoc.points[index].first, newLoc.points[index].last);
     });
-    int passed = await addGeofence(nee, newLoc.id, newLoc.radius);
+    int passed = await addGeofence(nee, locNew.id, locNew.radius);
     // print("geofence.......................");
     if (passed != 0) {
       await localarmsBox.delete(localarmsBox.keys.last);
