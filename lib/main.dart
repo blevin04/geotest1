@@ -55,9 +55,9 @@ class _MyAppState extends State<MyApp> {
       String locId = data.first;
       await Hive.openBox("LocAlarms");
       var allLocs = Hive.box("LocAlarms").toMap();
-      if (allLocs.isEmpty) {
-        await showNotification("Test", "This is the notification ", " ");
-      }
+      // if (allLocs.isEmpty) {
+      //   await showNotification("Test", "This is the notification ", " ");
+      // }
       allLocs.forEach((key, value) async {
         if (value.id == locId) {
           List<dynamic> attch = value.attachments;
@@ -68,6 +68,7 @@ class _MyAppState extends State<MyApp> {
               imgs = (value0.last);
             }
           });
+          imgs = attch.first.first;
           String action = data.last;
           await showNotification("$action Location!", value.message, imgs);
         }

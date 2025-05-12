@@ -71,9 +71,9 @@ Future<void> initPlatformState() async {
     serviceId: 525600,
     callbackDispatcher: callbackDispatcher,
   );
-  await addGeofence([
-    LatLng(Angle.degree(-0.3949068884185996), Angle.degree(36.96352411061525))
-  ], "testid0", 25);
+  // await addGeofence([
+  //   LatLng(Angle.degree(-0.3949068884185996), Angle.degree(36.96352411061525))
+  // ], "testid0", 25);
 }
 
 Future<int> addGeofence(
